@@ -25,7 +25,6 @@ yarn-error.log*
 .env.production
 
 # Uploaded files (Multer uploads)
-uploads/
 public/uploads/
 
 # Build artifacts
