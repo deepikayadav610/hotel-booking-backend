@@ -42,6 +42,30 @@ router.post("/register", async (req, res) => {
     }
 });
 
+// 📌 Update User Profile
+router.put("/update", authMiddleware, async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const user = await User.findById(req.user.userId);
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(password, salt);
+        }
+
+        await user.save();
+        res.json({ msg: "Profile updated successfully", user });
+    } catch (err) {
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 // 📌 Login a user
 router.post("/login", async (req, res) => {
     try {
